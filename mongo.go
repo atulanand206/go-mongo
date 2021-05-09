@@ -30,7 +30,7 @@ func GetMongoClient() *mongo.Client {
 	return client
 }
 
-func Write(dbName string, collection string, doc bson.D) *mongo.InsertOneResult {
+func Write(dbName string, collection string, doc bson.D) (*mongo.InsertOneResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
@@ -40,9 +40,9 @@ func Write(dbName string, collection string, doc bson.D) *mongo.InsertOneResult 
 	result, err := dbCollection.InsertOne(ctx, doc)
 	if err != nil {
 		log.Print(err)
-		return nil
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
 func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResult {
@@ -56,22 +56,22 @@ func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResul
 	return singleResult
 }
 
-func Find(dbName string, collection string, filter bson.M) *mongo.Cursor {
+func Find(dbName string, collection string, filter bson.M) (*mongo.Cursor, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
 	defer client.Disconnect(ctx)
 	db := client.Database(dbName)
 	dbCollection := db.Collection(collection)
-	singleResult, err := dbCollection.Find(ctx, filter)
+	cursor, err := dbCollection.Find(ctx, filter)
 	if err != nil {
 		log.Print(err)
-		return nil
+		return nil, err
 	}
-	return singleResult
+	return cursor, err
 }
 
-func Update(dbName string, collection string, identifier bson.M, change bson.D) *mongo.UpdateResult {
+func Update(dbName string, collection string, identifier bson.M, change bson.D) (*mongo.UpdateResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
@@ -81,12 +81,12 @@ func Update(dbName string, collection string, identifier bson.M, change bson.D) 
 	result, err := dbCollection.UpdateMany(ctx, identifier, change)
 	if err != nil {
 		log.Print(err)
-		return nil
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
-func Delete(dbName string, collection string, identifier bson.M) *mongo.DeleteResult {
+func Delete(dbName string, collection string, identifier bson.M) (*mongo.DeleteResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
@@ -96,7 +96,7 @@ func Delete(dbName string, collection string, identifier bson.M) *mongo.DeleteRe
 	result, err := dbCollection.DeleteMany(ctx, identifier)
 	if err != nil {
 		log.Print(err)
-		return nil
+		return nil, err
 	}
-	return result
+	return result, nil
 }
