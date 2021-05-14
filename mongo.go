@@ -56,14 +56,14 @@ func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResul
 	return singleResult
 }
 
-func Find(dbName string, collection string, filter bson.M) (*mongo.Cursor, error) {
+func Find(dbName string, collection string, filter bson.M, options *options.FindOptions) (*mongo.Cursor, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
 	defer client.Disconnect(ctx)
 	db := client.Database(dbName)
 	dbCollection := db.Collection(collection)
-	cursor, err := dbCollection.Find(ctx, filter)
+	cursor, err := dbCollection.Find(ctx, filter, options)
 	if err != nil {
 		log.Print(err)
 		return nil, err
