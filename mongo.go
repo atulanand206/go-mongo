@@ -11,22 +11,22 @@ import (
 
 // Variable to store the client url of the mongo db database.
 // Must be configured before calling the API methods.
-var clientUrl string
+var ClientUrl string
 
 // Configures the client url of the mongo db database.
 // Must be configured before calling the API methods.
 func ConfigureMongoClient(url string) {
-	clientUrl = url
+	ClientUrl = url
 }
 
 // Returns the db client of the attached client url.
 func GetMongoClient() *mongo.Client {
-	if clientUrl == "" {
+	if ClientUrl == "" {
 		log.Print("Client id not present")
 		return nil
 	}
 	client, err := mongo.NewClient(options.Client().ApplyURI(
-		clientUrl,
+		ClientUrl,
 	))
 	if err != nil {
 		log.Print(err)
