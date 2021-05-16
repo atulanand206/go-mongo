@@ -9,12 +9,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+/* Instance variable to store the client url of the mongo db database.
+Must be configured before calling the API methods. */
 var clientUrl string
 
+/* Configures the client url of the mongo db database.
+Must be configured before calling the API methods. */
 func ConfigureMongoClient(url string) {
 	clientUrl = url
 }
 
+/* Returns the db client of the attached client url. */
 func GetMongoClient() *mongo.Client {
 	if clientUrl == "" {
 		log.Print("Client id not present")
@@ -30,6 +35,9 @@ func GetMongoClient() *mongo.Client {
 	return client
 }
 
+/* Inserts a document to the specified database and collection.
+Returns the id of the document upon creation and error otherwise.
+Client must be configured to use this endpoint. */
 func Write(dbName string, collection string, doc bson.D) (*mongo.InsertOneResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
@@ -45,6 +53,18 @@ func Write(dbName string, collection string, doc bson.D) (*mongo.InsertOneResult
 	return result, nil
 }
 
+/* Converts a struct to the bson document used for inserting document. */
+func Document(v interface{}) (doc *bson.D, err error) {
+	data, err := bson.Marshal(v)
+	if err != nil {
+		log.Panic(err)
+	}
+	err = bson.Unmarshal(data, &doc)
+	return
+}
+
+/* Finds a document based on the filter from the specified database and collection.
+Client must be configured to use this endpoint. */
 func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResult {
 	client := GetMongoClient()
 	ctx := context.Background()
@@ -56,6 +76,10 @@ func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResul
 	return singleResult
 }
 
+/* Finds a cursor of the documents based on the filter and filter options
+from the specified database and collection.
+Returns the documents upon search and error otherwise.
+Client must be configured to use this endpoint. */
 func Find(dbName string, collection string, filter bson.M, options *options.FindOptions) (*mongo.Cursor, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
@@ -71,6 +95,10 @@ func Find(dbName string, collection string, filter bson.M, options *options.Find
 	return cursor, err
 }
 
+/* Updates the documents to the specified database and collection based on identifier filter.
+Returns the id of the document upon update if one entry or the count information if many.
+If update fails, returns an error otherwise.
+Client must be configured to use this endpoint. */
 func Update(dbName string, collection string, identifier bson.M, change bson.D) (*mongo.UpdateResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
@@ -86,6 +114,10 @@ func Update(dbName string, collection string, identifier bson.M, change bson.D) 
 	return result, nil
 }
 
+/* Deletes the documents from the specified database and collection based on identifier filter.
+Returns the id of the document upon delete if one entry or the count information if many.
+If delete fails, returns an error otherwise.
+Client must be configured to use this endpoint. */
 func Delete(dbName string, collection string, identifier bson.M) (*mongo.DeleteResult, error) {
 	client := GetMongoClient()
 	ctx := context.Background()
