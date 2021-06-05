@@ -10,6 +10,12 @@ You can configure the client URL and start interacting with the mongo db databas
 
 MongoDB is a document based database service. It has a cloud-oriented product called MongoDB Atlas which handles the replication strategy without external effort. The schema is not required to be defined as the documents can contain anything.
 
+## Learning outcomes
+- Configure Mongo DB Atlas database using the client url.
+- Write, Update and Delete mongo document object using identifiers, wherever applicable.
+- Filtering and sorting documents to a cursor response.
+- Parsing a list response using a document cursor.
+
 ## Installation
 
 The recommended way to get started using the MongoDB Go driver is by using go modules to install the dependency in your project. This can be done either by importing packages from [go-mongo](github.com/atulanand206/go-mongo) and having the build step install the dependency or by explicitly running
