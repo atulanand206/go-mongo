@@ -63,6 +63,24 @@ func Document(v interface{}) (doc *bson.D, err error) {
 	return
 }
 
+// Inserts many documents to the specified database and collection.
+// Returns the id of the documents upon creation and error otherwise.
+// Client must be configured to use this endpoint.
+func WriteMany(dbName string, collection string, doc []interface{}) (*mongo.InsertManyResult, error) {
+	client := GetMongoClient()
+	ctx := context.Background()
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
+	db := client.Database(dbName)
+	dbCollection := db.Collection(collection)
+	result, err := dbCollection.InsertMany(ctx, doc)
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+	return result, nil
+}
+
 // Finds a document based on the filter from the specified database and collection.
 // Client must be configured to use this endpoint.
 func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResult {
