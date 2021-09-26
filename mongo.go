@@ -35,6 +35,40 @@ func GetMongoClient() *mongo.Client {
 	return client
 }
 
+// Drops collections with given names
+func dropCollections(dbName string, collections []string) error {
+	client := GetMongoClient()
+	ctx := context.Background()
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
+	db := client.Database(dbName)
+	for _, index := range collections {
+		err := db.Collection(index).Drop(ctx)
+		if err != nil {
+			log.Print(err)
+			return err
+		}
+	}
+	return nil
+}
+
+// Creates collections with given names
+func createCollections(dbName string, collections []string) error {
+	client := GetMongoClient()
+	ctx := context.Background()
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
+	db := client.Database(dbName)
+	for _, index := range collections {
+		err := db.CreateCollection(ctx, index)
+		if err != nil {
+			log.Print(err)
+			return err
+		}
+	}
+	return nil
+}
+
 // Inserts a document to the specified database and collection.
 // Returns the id of the document upon creation and error otherwise.
 // Client must be configured to use this endpoint.
