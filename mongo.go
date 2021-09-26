@@ -36,7 +36,7 @@ func GetMongoClient() *mongo.Client {
 }
 
 // Drops collections with given names
-func dropCollections(dbName string, collections []string) error {
+func DropCollections(dbName string, collections []string) error {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
@@ -53,7 +53,7 @@ func dropCollections(dbName string, collections []string) error {
 }
 
 // Creates collections with given names
-func createCollections(dbName string, collections []string) error {
+func CreateCollections(dbName string, collections []string) error {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
