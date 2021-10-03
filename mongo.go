@@ -117,14 +117,14 @@ func WriteMany(dbName string, collection string, doc []interface{}) (*mongo.Inse
 
 // Finds a document based on the filter from the specified database and collection.
 // Client must be configured to use this endpoint.
-func FindOne(dbName string, collection string, filter bson.M) *mongo.SingleResult {
+func FindOne(dbName string, collection string, filter bson.M, options *options.FindOneOptions) *mongo.SingleResult {
 	client := GetMongoClient()
 	ctx := context.Background()
 	client.Connect(ctx)
 	defer client.Disconnect(ctx)
 	db := client.Database(dbName)
 	dbCollection := db.Collection(collection)
-	singleResult := dbCollection.FindOne(ctx, filter)
+	singleResult := dbCollection.FindOne(ctx, filter, options)
 	return singleResult
 }
 
