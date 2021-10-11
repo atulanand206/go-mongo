@@ -69,6 +69,20 @@ func CreateCollections(dbName string, collections []string) error {
 	return nil
 }
 
+func CreateCollection(dbName string, collection string, options *options.CreateCollectionOptions) error {
+	client := GetMongoClient()
+	ctx := context.Background()
+	client.Connect(ctx)
+	defer client.Disconnect(ctx)
+	db := client.Database(dbName)
+	err := db.CreateCollection(ctx, collection, options)
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	return nil
+}
+
 // Inserts a document to the specified database and collection.
 // Returns the id of the document upon creation and error otherwise.
 // Client must be configured to use this endpoint.
