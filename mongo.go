@@ -60,7 +60,7 @@ func (mongoClient MongoClient) DropCollections(collections []string) error {
 }
 
 // Creates collections with given names
-func (mongoClient MongoClient) CreateCollections(dbName string, collections []string) error {
+func (mongoClient MongoClient) CreateCollections(collections []string) error {
 	ctx := context.Background()
 	for _, index := range collections {
 		err := mongoClient.db.CreateCollection(ctx, index)
@@ -72,7 +72,7 @@ func (mongoClient MongoClient) CreateCollections(dbName string, collections []st
 	return nil
 }
 
-func (mongoClient MongoClient) CreateCollection(dbName string, collection string, options *options.CreateCollectionOptions) error {
+func (mongoClient MongoClient) CreateCollection(collection string, options *options.CreateCollectionOptions) error {
 	ctx := context.Background()
 	err := mongoClient.db.CreateCollection(ctx, collection, options)
 	if err != nil {
@@ -85,7 +85,7 @@ func (mongoClient MongoClient) CreateCollection(dbName string, collection string
 // Inserts a document to the specified database and collection.
 // Returns the id of the document upon creation and error otherwise.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) Write(dbName string, collection string, doc bson.D) (*mongo.InsertOneResult, error) {
+func (mongoClient MongoClient) Write(collection string, doc bson.D) (*mongo.InsertOneResult, error) {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	result, err := dbCollection.InsertOne(ctx, doc)
@@ -109,7 +109,7 @@ func (mongoClient MongoClient) Document(v interface{}) (doc *bson.D, err error) 
 // Inserts many documents to the specified database and collection.
 // Returns the id of the documents upon creation and error otherwise.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) WriteMany(dbName string, collection string, doc []interface{}) (*mongo.InsertManyResult, error) {
+func (mongoClient MongoClient) WriteMany(collection string, doc []interface{}) (*mongo.InsertManyResult, error) {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	result, err := dbCollection.InsertMany(ctx, doc)
@@ -122,7 +122,7 @@ func (mongoClient MongoClient) WriteMany(dbName string, collection string, doc [
 
 // Finds a document based on the filter from the specified database and collection.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) FindOne(dbName string, collection string, filter bson.M, options *options.FindOneOptions) *mongo.SingleResult {
+func (mongoClient MongoClient) FindOne(collection string, filter bson.M, options *options.FindOneOptions) *mongo.SingleResult {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	singleResult := dbCollection.FindOne(ctx, filter, options)
@@ -133,7 +133,7 @@ func (mongoClient MongoClient) FindOne(dbName string, collection string, filter 
 // from the specified database and collection.
 // Returns the documents upon search and error otherwise.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) Find(dbName string, collection string, filter bson.M, options *options.FindOptions) (*mongo.Cursor, error) {
+func (mongoClient MongoClient) Find(collection string, filter bson.M, options *options.FindOptions) (*mongo.Cursor, error) {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	cursor, err := dbCollection.Find(ctx, filter, options)
@@ -148,7 +148,7 @@ func (mongoClient MongoClient) Find(dbName string, collection string, filter bso
 // Returns the id of the document upon update if one entry or the count information if many.
 // If update fails, returns an error otherwise.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) Update(dbName string, collection string, identifier bson.M, change bson.D) (*mongo.UpdateResult, error) {
+func (mongoClient MongoClient) Update(collection string, identifier bson.M, change bson.D) (*mongo.UpdateResult, error) {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	result, err := dbCollection.UpdateMany(ctx, identifier, change)
@@ -163,7 +163,7 @@ func (mongoClient MongoClient) Update(dbName string, collection string, identifi
 // Returns the id of the document upon delete if one entry or the count information if many.
 // If delete fails, returns an error otherwise.
 // Client must be configured to use this endpoint.
-func (mongoClient MongoClient) Delete(dbName string, collection string, identifier bson.M) (*mongo.DeleteResult, error) {
+func (mongoClient MongoClient) Delete(collection string, identifier bson.M) (*mongo.DeleteResult, error) {
 	ctx := context.Background()
 	dbCollection := mongoClient.db.Collection(collection)
 	result, err := dbCollection.DeleteMany(ctx, identifier)
